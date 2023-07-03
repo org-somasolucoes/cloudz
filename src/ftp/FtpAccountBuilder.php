@@ -1,8 +1,8 @@
 <?php 
 
-namespace SomaGestao\CloudService\Ftp;
+namespace SomaSolucoes\Cloudz\Ftp;
 
-use SomaGestao\CloudService\Ftp\FTPAccount;
+use SomaSolucoes\Cloudz\Ftp\FTPAccount;
 
 class FTPAccountBuilder
 {

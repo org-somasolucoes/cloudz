@@ -1,6 +1,6 @@
 <?php
 
-namespace SomaGestao\CloudService\Response;
+namespace SomaSolucoes\Cloudz\Response;
 
 abstract class CloudServiceResponse 
 {

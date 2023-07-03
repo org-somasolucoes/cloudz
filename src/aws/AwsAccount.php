@@ -1,6 +1,6 @@
 <?php
 
-namespace SomaGestao\CloudService\Aws;
+namespace SomaSolucoes\Cloudz\Aws;
 
 class AWSAccount 
 {
@@ -10,6 +10,7 @@ class AWSAccount
     public $secretKey;
     public $region;
     public $type;
+    public $settings;
 
     public function __construct(int $accountCode)
     {

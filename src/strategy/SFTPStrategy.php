@@ -1,13 +1,13 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SomaSolucoes\Cloudz\Strategy;
 
 use Exception;
 use phpseclib3\Net\SFTP;
-use SomaGestao\CloudService\Ftp\FtpAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Ftp\StrategyBasedOnProtocolFTP;
+use SomaSolucoes\Cloudz\Ftp\FtpAccount;
+use SomaSolucoes\Cloudz\CloudServiceFile;
+use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
+use SomaSolucoes\Cloudz\Ftp\StrategyBasedOnProtocolFTP;
 
 class SFTPStrategy extends StrategyBasedOnProtocolFTP
 {
@@ -64,7 +64,7 @@ class SFTPStrategy extends StrategyBasedOnProtocolFTP
         }
         
         $resourcePath = "{$this->sftpAccount->accessUrl}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
-        $resourceUrl = "{$resourcePath}/{$remoteFileName}";
+        $resourceUrl = "{$resourcePath}{$remoteFileName}";
 
         return $resourceUrl;
     }

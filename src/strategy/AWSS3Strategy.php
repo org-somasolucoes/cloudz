@@ -1,29 +1,27 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SomaSolucoes\Cloudz\Strategy;
 
 use Exception;
-use SomaGestao\CloudService\CloudService;
-use SomaGestao\CloudService\Aws\AwsAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\CloudServiceSettings;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Strategy\CloudServiceStrategy;
+use SomaSolucoes\Cloudz\Aws\AwsAccount;
+use SomaSolucoes\Cloudz\CloudServiceFile;
+use SomaSolucoes\Cloudz\CloudServiceSettings;
+use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
+use SomaSolucoes\Cloudz\Strategy\CloudServiceStrategy;
+use SomaSolucoes\Cloudz\Tool\CloudServiceAccountTool;
+use SomaSolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonRealPaths;
+use SomaSolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonTool;
 
 class AWSS3Strategy extends CloudServiceStrategy
 {
-    private CloudService $cloudService;
     private AwsAccount $awsAccount;
     private $bucketName;
     private $sdk;
 
-    public function __construct(CloudService $cloudService, AwsAccount $awsAccount, CloudServiceSettings $settings)
+    public function __construct(AwsAccount $awsAccount, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-
-        $this->cloudService = $cloudService;
         $this->awsAccount = $awsAccount;
-
         $this->sdk = new \Aws\S3\S3Client([
             'credentials' => [
                 'key'     => $this->awsAccount->key,
@@ -33,12 +31,10 @@ class AWSS3Strategy extends CloudServiceStrategy
             'region'  => $this->awsAccount->region,
             'version' => 'latest'
         ]);
-
-        $CI = get_instance();
-        $CI->load->model('AWSConta_Gestao');
-
-        $cloudServiceCode = $this->cloudService->getCloudServiceCode();
-        $this->bucketName = $CI->AWSConta_Gestao->getBucketName($cloudServiceCode);
+        
+        $awsS3Data = 
+            CloudServiceAccountTool::awsS3Selector($this->awsAccount->settings, $this->awsAccount->s3Code);
+        $this->bucketName = $awsS3Data->bucketName;
     }
 
     protected function beforeExecute()

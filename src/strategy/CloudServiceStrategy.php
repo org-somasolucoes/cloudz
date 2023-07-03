@@ -1,15 +1,16 @@
 <?php 
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SomaSolucoes\Cloudz\Strategy;
 
 use Throwable;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\BeingCloudService;
-use SomaGestao\CloudService\CloudServiceSettings;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Response\CloudServiceResponseError;
-use SomaGestao\CloudService\Response\CloudServiceResponseSuccess;
-use SomaGestao\CloudService\Response\CloudServiceResponseDeleteSuccess;
+use SomaSolucoes\Cloudz\CloudServiceFile;
+use SomaSolucoes\Cloudz\BeingCloudService;
+use SomaSolucoes\Cloudz\CloudServiceSettings;
+use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
+use SomaSolucoes\Cloudz\Response\CloudServiceResponseError;
+use SomaSolucoes\Cloudz\Response\CloudServiceResponseSuccess;
+use SomaSolucoes\Cloudz\Response\CloudServiceResponseDeleteSuccess;
+
 
 abstract class CloudServiceStrategy implements BeingCloudService
 {

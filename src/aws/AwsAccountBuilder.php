@@ -1,8 +1,8 @@
 <?php
 
-namespace SomaGestao\CloudService\Aws;
+namespace SomaSolucoes\Cloudz\Aws;
 
-use SomaGestao\CloudService\Aws\AWSAccount;
+use SomaSolucoes\Cloudz\Aws\AWSAccount;
 
 class AWSAccountBuilder
 {
@@ -40,6 +40,11 @@ class AWSAccountBuilder
     public function ofTypeS3($s3Code)
     {
         $this->awsAccount->s3Code = $s3Code ?? '';
+        return $this;
+    }
+
+    public function usingSettings($settings) {
+        $this->awsAccount->settings = $settings ?? '';
         return $this;
     }
 

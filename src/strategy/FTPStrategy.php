@@ -1,12 +1,12 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SomaSolucoes\Cloudz\Strategy;
 
 use Exception;
-use SomaGestao\CloudService\Ftp\FtpAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Ftp\StrategyBasedOnProtocolFTP;
+use SomaSolucoes\Cloudz\Ftp\FtpAccount;
+use SomaSolucoes\Cloudz\CloudServiceFile;
+use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
+use SomaSolucoes\Cloudz\Ftp\StrategyBasedOnProtocolFTP;
 
 class FTPStrategy extends StrategyBasedOnProtocolFTP 
 {
@@ -37,7 +37,15 @@ class FTPStrategy extends StrategyBasedOnProtocolFTP
     protected function changeToWorkDir()
     {
         $realWorkDir = "{$this->ftpAccount->workDir}/{$this->settings->get('path')}";
-        ftpMakeSubdirs($this->fconn, $realWorkDir);
+
+        $parts = explode('/', $realWorkDir);
+        foreach ($parts as $part) {
+            if (!empty($part) && !ftp_chdir($this->fconn, $part)) {
+                ftp_mkdir($this->fconn, $part);
+                ftp_chdir($this->fconn, $part);
+                ftp_chmod($this->fconn, 0777, $part);
+            }
+        }
         return $realWorkDir;
     }
 
