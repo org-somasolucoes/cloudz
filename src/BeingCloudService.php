@@ -1,6 +1,6 @@
 <?php 
 
-namespace SomaSolucoes\Cloudz;
+namespace SOMASolucoes\Cloudz;
 
 interface BeingCloudService {
     function upload(CloudServiceFile $file);

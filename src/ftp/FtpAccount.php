@@ -1,6 +1,6 @@
 <?php 
 
-namespace SomaSolucoes\Cloudz\Ftp;
+namespace SOMASolucoes\Cloudz\FTP;
 
 class FTPAccount
 {
@@ -12,7 +12,7 @@ class FTPAccount
     public $isPassive = false;
     public $workDir = '';
     public $dirPlugin = '';
-    public $accessUrl = '';
+    public $accessURL = '';
     public $useSSH = false;
     
     public function __construct(int $code)

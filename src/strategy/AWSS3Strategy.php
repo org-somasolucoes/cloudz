@@ -1,45 +1,40 @@
 <?php
 
-namespace SomaSolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\Cloudz\Strategy;
 
 use Exception;
-use SomaSolucoes\Cloudz\Aws\AwsAccount;
-use SomaSolucoes\Cloudz\CloudServiceFile;
-use SomaSolucoes\Cloudz\CloudServiceSettings;
-use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
-use SomaSolucoes\Cloudz\Strategy\CloudServiceStrategy;
-use SomaSolucoes\Cloudz\Tool\CloudServiceAccountTool;
-use SomaSolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonRealPaths;
-use SomaSolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonTool;
+use SOMASolucoes\Cloudz\AWSS3\AWSS3Account;
+use SOMASolucoes\Cloudz\CloudServiceFile;
+use SOMASolucoes\Cloudz\CloudServiceSettings;
+use SOMASolucoes\Cloudz\DeleteCloudServiceFile;
+use SOMASolucoes\Cloudz\Strategy\CloudServiceStrategy;
 
 class AWSS3Strategy extends CloudServiceStrategy
 {
-    private AwsAccount $awsAccount;
-    private $bucketName;
-    private $sdk;
+    private AWSS3Account $AWSS3Account;
+    private string $bucketName;
+    private $SDK;
 
-    public function __construct(AwsAccount $awsAccount, CloudServiceSettings $settings)
+    public function __construct(AWSS3Account $AWSS3Account, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-        $this->awsAccount = $awsAccount;
-        $this->sdk = new \Aws\S3\S3Client([
+        $this->AWSS3Account = $AWSS3Account;
+        $this->SDK = new \Aws\S3\S3Client([
             'credentials' => [
-                'key'     => $this->awsAccount->key,
-                'secret'  => $this->awsAccount->secretKey
+                'key'     => $this->AWSS3Account->key,
+                'secret'  => $this->AWSS3Account->secretKey
             ],
 
-            'region'  => $this->awsAccount->region,
+            'region'  => $this->AWSS3Account->region,
             'version' => 'latest'
         ]);
-        
-        $awsS3Data = 
-            CloudServiceAccountTool::awsS3Selector($this->awsAccount->settings, $this->awsAccount->s3Code);
-        $this->bucketName = $awsS3Data->bucketName;
+
+        $this->bucketName = $AWSS3Account->bucketName;
     }
 
     protected function beforeExecute()
     {
-        if (!$this->sdk) {
+        if (!$this->SDK) {
             throw new Exception('Sem conexão com o AWS.', 400);
         }
     }
@@ -57,11 +52,11 @@ class AWSS3Strategy extends CloudServiceStrategy
             throw new Exception('Não foi informado o nome do Bucket.');
         }
         
-        $uploadPath     = $this->defaultPathOfUpload();
+        $uploadPath = $this->defaultPathOfUpload();
         $remoteFileName = $file->getRemoteFileName($this->settings->get('canEncryptName', false));
-        $fileName       = $file->getLocalFile();
+        $fileName = $file->getLocalFile();
 
-        $response = $this->sdk->putObject([
+        $response = $this->SDK->putObject([
             'Bucket'     => $this->bucketName,
             'Key'        => $uploadPath . $remoteFileName,
             'SourceFile' => $fileName
@@ -71,8 +66,8 @@ class AWSS3Strategy extends CloudServiceStrategy
             throw new Exception("O arquivo '{$fileName}' não foi transferido corretamente para o servidor AWS.", 400);
         }
 
-        $resourceUrl = $response['@metadata']['effectiveUri'] ?: '';
-        return $resourceUrl;
+        $resourceURL = $response['@metadata']['effectiveUri'] ?: '';
+        return $resourceURL;
     }
 
     protected function doDelete(DeleteCloudServiceFile $file)
@@ -80,7 +75,7 @@ class AWSS3Strategy extends CloudServiceStrategy
         $uploadPath = $this->defaultPathOfUpload();
         $remoteFileName = $file->getRemoteFileName();
 
-        $response = $this->sdk->deleteObject([
+        $response = $this->SDK->deleteObject([
             'Bucket' => $this->bucketName,
             'Key'    => $uploadPath . $remoteFileName
         ]);

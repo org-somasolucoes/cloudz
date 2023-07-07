@@ -1,6 +1,6 @@
 <?php
 
-namespace SomaSolucoes\Cloudz\Tool\JsonTools;
+namespace SOMASolucoes\Cloudz\Tool\JsonTools;
 
 abstract class CloudServiceJsonTool {
     public static function recoverJson(string $realPath) {

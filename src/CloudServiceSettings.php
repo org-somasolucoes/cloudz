@@ -1,6 +1,6 @@
 <?php
 
-namespace SomaSolucoes\Cloudz;
+namespace SOMASolucoes\Cloudz;
 
 use Ds\Map;
 

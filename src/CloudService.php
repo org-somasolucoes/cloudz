@@ -1,29 +1,28 @@
 <?php
 
-namespace SomaSolucoes\Cloudz;
+namespace SOMASolucoes\Cloudz;
 
 use Exception;
-use SomaSolucoes\Cloudz\Strategy\CloudServiceStrategy;
-use SomaSolucoes\Cloudz\Strategy\CloudServiceStrategyFactory;
+use SOMASolucoes\Cloudz\Strategy\CloudServiceStrategy;
+use SOMASolucoes\Cloudz\Strategy\CloudServiceStrategyFactory;
 
 final class CloudService
 {
-    private string $cloudServiceType;
-    private ?int $cloudServiceCode;
-    private $cloudServiceAccount;
+    private string $type;
+    private ?int $code;
+    private $account;
     public CloudServiceSettings $settings;
-    private CloudServiceStrategy $cloudServiceStrategy;
+    private CloudServiceStrategy $strategy;
 
-    public function __construct(string $cloudServiceType, ?int $cloudServiceCode = null)
+    public function __construct(string $type, ?int $code = null)
     {
-        $this->cloudServiceType = $cloudServiceType;
-        $this->cloudServiceCode = $cloudServiceCode;
+        $this->type = $type;
+        $this->code = $code;
         $this->settings = new CloudServiceSettings();
+        
         try {
-            $this->cloudServiceAccount = 
-                CloudServiceAccountFactory::assemble($this->cloudServiceType, $this->cloudServiceCode?:0);
-            $this->cloudServiceStrategy =
-                CloudServiceStrategyFactory::assemble($this->cloudServiceType, $this->cloudServiceAccount, $this->settings);
+            $this->account = CloudServiceAccountFactory::assemble($this->type, $this->code?:0);
+            $this->strategy = CloudServiceStrategyFactory::assemble($this->type, $this->account, $this->settings);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -31,11 +30,11 @@ final class CloudService
 
     function upload(CloudServiceFile $file)
     {
-        return $this->cloudServiceStrategy->upload($file); 
+        return $this->strategy->upload($file); 
     }
 
     function delete(DeleteCloudServiceFile $file)
     {
-        return $this->cloudServiceStrategy->delete($file);
+        return $this->strategy->delete($file);
     }
 }

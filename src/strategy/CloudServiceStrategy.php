@@ -1,15 +1,15 @@
 <?php 
 
-namespace SomaSolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\Cloudz\Strategy;
 
 use Throwable;
-use SomaSolucoes\Cloudz\CloudServiceFile;
-use SomaSolucoes\Cloudz\BeingCloudService;
-use SomaSolucoes\Cloudz\CloudServiceSettings;
-use SomaSolucoes\Cloudz\DeleteCloudServiceFile;
-use SomaSolucoes\Cloudz\Response\CloudServiceResponseError;
-use SomaSolucoes\Cloudz\Response\CloudServiceResponseSuccess;
-use SomaSolucoes\Cloudz\Response\CloudServiceResponseDeleteSuccess;
+use SOMASolucoes\Cloudz\CloudServiceFile;
+use SOMASolucoes\Cloudz\BeingCloudService;
+use SOMASolucoes\Cloudz\CloudServiceSettings;
+use SOMASolucoes\Cloudz\DeleteCloudServiceFile;
+use SOMASolucoes\Cloudz\Response\CloudServiceResponseError;
+use SOMASolucoes\Cloudz\Response\CloudServiceResponseSuccess;
+use SOMASolucoes\Cloudz\Response\CloudServiceResponseDeleteSuccess;
 
 
 abstract class CloudServiceStrategy implements BeingCloudService
@@ -32,13 +32,13 @@ abstract class CloudServiceStrategy implements BeingCloudService
         try {
             $this->beforeExecute();
 
-            $resourceUrl = $this->doUpload($file);
+            $resourceURL = $this->doUpload($file);
 
             if ($this->settings->get('canDeleteAfterUpload', true)) {
                 @unlink($file->getLocalFile());
             }
 
-            $response = new CloudServiceResponseSuccess(200, $resourceUrl);
+            $response = new CloudServiceResponseSuccess(200, $resourceURL);
         } catch (Throwable $e) {
             $response = new CloudServiceResponseError($e->getCode(), $e->getMessage());
         } finally {

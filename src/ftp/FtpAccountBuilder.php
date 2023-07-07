@@ -1,68 +1,68 @@
 <?php 
 
-namespace SomaSolucoes\Cloudz\Ftp;
+namespace SOMASolucoes\Cloudz\FTP;
 
-use SomaSolucoes\Cloudz\Ftp\FTPAccount;
+use SOMASolucoes\Cloudz\FTP\FTPAccount;
 
 class FTPAccountBuilder
 {
-    private FTPAccount $ftpAccount;
+    private FTPAccount $FTPAccount;
 
     public function __construct(int $code)
     {
-        $this->ftpAccount = new FTPAccount($code);
+        $this->FTPAccount = new FTPAccount($code);
     }
 
     public function usingHost($host)
     {
-        $this->ftpAccount->host = $host ?? '';
+        $this->FTPAccount->host = $host ?? '';
         return $this;
     }
 
     public function atPort($port)
     {
-        $this->ftpAccount->port = intval($port) ?: null;
+        $this->FTPAccount->port = intval($port) ?: null;
         return $this;
     }
 
     public function withUser($user)
     {
-        $this->ftpAccount->user = $user ?? '';
+        $this->FTPAccount->user = $user ?? '';
         return $this;
     }
 
     public function withPassword($password)
     {
-        $this->ftpAccount->password = $password ?? '';
+        $this->FTPAccount->password = $password ?? '';
         return $this;
     }
 
     public function beingPassive($isPassive)
     {
-        $this->ftpAccount->isPassive = $isPassive ?? false;
+        $this->FTPAccount->isPassive = $isPassive ?? false;
         return $this;
     }
 
     public function atWorkDir($workDir)
     {
-        $this->ftpAccount->workDir = rtrim($workDir, '/');
+        $this->FTPAccount->workDir = rtrim($workDir, '/');
         return $this;
     }
 
-    public function onAccessUrl($accessUrl)
+    public function onAccessURL($accessURL)
     {
-        $this->ftpAccount->accessUrl = rtrim($accessUrl, '/');
+        $this->FTPAccount->accessURL = rtrim($accessURL, '/');
         return $this;
     }
     
     public function usingSSH($useSSH)
     {
-        $this->ftpAccount->useSSH = $useSSH ?? false;
+        $this->FTPAccount->useSSH = $useSSH ?? false;
         return $this;
     }
 
     public function build()
     {
-        return $this->ftpAccount;
+        return $this->FTPAccount;
     }
 }

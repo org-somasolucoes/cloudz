@@ -1,9 +1,9 @@
 <?php
 
-namespace SomaSolucoes\Cloudz\Tool\JsonTools;
+namespace SOMASolucoes\Cloudz\Tool\JsonTools;
 
 class CloudServiceJsonRealPaths 
 {
-    const FTP_REAL_PATH = ".cloudz/ftp.json";
-    const AWS_REAL_PATH = ".cloudz/aws.json";
+    const FTP_REAL_PATH = ".cloudz/FTP.json";
+    const AWS_REAL_PATH = ".cloudz/AWSS3.json";
 }

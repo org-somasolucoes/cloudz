@@ -1,13 +1,13 @@
 <?php
 
-namespace SomaSolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\Cloudz\Strategy;
 
 use InvalidArgumentException;
-use SomaSolucoes\Cloudz\CloudServiceSettings;
-use SomaSolucoes\Cloudz\CloudServiceTypes;
-use SomaSolucoes\Cloudz\Strategy\AWSS3Strategy;
-use SomaSolucoes\Cloudz\Strategy\FTPStrategy;
-use SomaSolucoes\Cloudz\Strategy\SFTPStrategy;
+use SOMASolucoes\Cloudz\CloudServiceSettings;
+use SOMASolucoes\Cloudz\CloudServiceTypes;
+use SOMASolucoes\Cloudz\Strategy\AWSS3Strategy;
+use SOMASolucoes\Cloudz\Strategy\FTPStrategy;
+use SOMASolucoes\Cloudz\Strategy\SFTPStrategy;
 
 class CloudServiceStrategyFactory 
 {
@@ -19,7 +19,7 @@ class CloudServiceStrategyFactory
                     return new SFTPStrategy($cloudServiceAccount, $settings);
                 }
                 return new FTPStrategy($cloudServiceAccount, $settings);
-            case CloudServiceTypes::AWS_ACCOUNT:
+            case CloudServiceTypes::AWS_S3_ACCOUNT:
                 return new AWSS3Strategy($cloudServiceAccount, $settings);
             default:
                 throw new InvalidArgumentException('Tipo de serviço da nuvem inválido ou não implementado.');

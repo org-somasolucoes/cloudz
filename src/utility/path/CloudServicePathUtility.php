@@ -1,8 +1,8 @@
 <?php
 
-namespace SomaSolucoes\Cloudz\Utility\Path;
+namespace SOMASolucoes\Cloudz\Utility\Path;
 
-use SomaSolucoes\Cloudz\Utility\CloudServiceUtility;
+use SOMASolucoes\Cloudz\Utility\CloudServiceUtility;
 
 abstract class CloudServicePathUtility extends CloudServiceUtility
 {
