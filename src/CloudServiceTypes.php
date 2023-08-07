@@ -1,6 +1,6 @@
 <?php 
 
-namespace SOMASolucoes\Cloudz;
+namespace SOMASolucoes\CloudZ;
 
 class CloudServiceTypes 
 {

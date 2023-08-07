@@ -1,12 +1,12 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Response;
+namespace SOMASolucoes\CloudZ\Response;
 
 class CloudServiceResponseSuccess extends CloudServiceResponse 
 {
-    public function __construct(int $code, string $URL)
+    public function __construct(int $code, string $url)
     {
         parent::__construct($code);
-        $this->URL = $URL;
+        $this->url = $url;
     }
 }

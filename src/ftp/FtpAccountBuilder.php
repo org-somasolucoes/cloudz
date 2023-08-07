@@ -1,68 +1,68 @@
 <?php 
 
-namespace SOMASolucoes\Cloudz\FTP;
+namespace SOMASolucoes\CloudZ\FTP;
 
-use SOMASolucoes\Cloudz\FTP\FTPAccount;
+use SOMASolucoes\CloudZ\FTP\FTPAccount;
 
 class FTPAccountBuilder
 {
-    private FTPAccount $FTPAccount;
+    private FTPAccount $ftpAccount;
 
     public function __construct(int $code)
     {
-        $this->FTPAccount = new FTPAccount($code);
+        $this->ftpAccount = new FTPAccount($code);
     }
 
-    public function usingHost($host)
+    public function usingHost(string $host)
     {
-        $this->FTPAccount->host = $host ?? '';
+        $this->ftpAccount->host = $host;
         return $this;
     }
 
-    public function atPort($port)
+    public function atPort(int $port)
     {
-        $this->FTPAccount->port = intval($port) ?: null;
+        $this->ftpAccount->port = intval($port);
         return $this;
     }
 
-    public function withUser($user)
+    public function withUser(string $user)
     {
-        $this->FTPAccount->user = $user ?? '';
+        $this->ftpAccount->user = $user;
         return $this;
     }
 
-    public function withPassword($password)
+    public function withPassword(string $password)
     {
-        $this->FTPAccount->password = $password ?? '';
+        $this->ftpAccount->password = $password;
         return $this;
     }
 
-    public function beingPassive($isPassive)
+    public function beingPassive(bool $isPassive)
     {
-        $this->FTPAccount->isPassive = $isPassive ?? false;
+        $this->ftpAccount->isPassive = $isPassive;
         return $this;
     }
 
-    public function atWorkDir($workDir)
+    public function atWorkDir(string $workDir)
     {
-        $this->FTPAccount->workDir = rtrim($workDir, '/');
+        $this->ftpAccount->workDir = rtrim($workDir, '/');
         return $this;
     }
 
-    public function onAccessURL($accessURL)
+    public function onAccessUrl(string $accessUrl)
     {
-        $this->FTPAccount->accessURL = rtrim($accessURL, '/');
+        $this->ftpAccount->accessUrl = rtrim($accessUrl, '/');
         return $this;
     }
     
-    public function usingSSH($useSSH)
+    public function usingSsh(string $useSsh)
     {
-        $this->FTPAccount->useSSH = $useSSH ?? false;
+        $this->ftpAccount->useSsh = $useSsh;
         return $this;
     }
 
     public function build()
     {
-        return $this->FTPAccount;
+        return $this->ftpAccount;
     }
 }

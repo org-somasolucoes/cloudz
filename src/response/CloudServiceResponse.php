@@ -1,11 +1,11 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Response;
+namespace SOMASolucoes\CloudZ\Response;
 
 abstract class CloudServiceResponse 
 {
     private int $code;
-    protected string $URL;
+    protected string $url;
     protected string $message;
 
     public function __construct(int $code)
@@ -17,8 +17,8 @@ abstract class CloudServiceResponse
         return $this->code;
     }
 
-    public function getURL() {
-        return $this->URL;
+    public function getUrl() {
+        return $this->url;
     }
 
     public function getMessage() {

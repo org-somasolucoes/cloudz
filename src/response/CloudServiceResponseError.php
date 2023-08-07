@@ -1,6 +1,6 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Response;
+namespace SOMASolucoes\CloudZ\Response;
 
 class CloudServiceResponseError extends CloudServiceResponse 
 {

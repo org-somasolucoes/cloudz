@@ -1,8 +1,8 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\FTP;
+namespace SOMASolucoes\CloudZ\FTP;
 
-use SOMASolucoes\Cloudz\Strategy\CloudServiceStrategy;
+use SOMASolucoes\CloudZ\Strategy\CloudServiceStrategy;
 
 abstract class StrategyBasedOnProtocolFTP extends CloudServiceStrategy
 {

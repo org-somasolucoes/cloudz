@@ -1,40 +1,40 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
-use SOMASolucoes\Cloudz\AWSS3\AWSS3Account;
-use SOMASolucoes\Cloudz\CloudServiceFile;
-use SOMASolucoes\Cloudz\CloudServiceSettings;
-use SOMASolucoes\Cloudz\DeleteCloudServiceFile;
-use SOMASolucoes\Cloudz\Strategy\CloudServiceStrategy;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\AWS\AWSS3\AWSS3Account;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\Strategy\CloudServiceStrategy;
 
 class AWSS3Strategy extends CloudServiceStrategy
 {
-    private AWSS3Account $AWSS3Account;
+    private AWSS3Account $awsS3Account;
     private string $bucketName;
-    private $SDK;
+    private $sdk;
 
-    public function __construct(AWSS3Account $AWSS3Account, CloudServiceSettings $settings)
+    public function __construct(AWSS3Account $awsS3Account, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-        $this->AWSS3Account = $AWSS3Account;
-        $this->SDK = new \Aws\S3\S3Client([
+        $this->awsS3Account = $awsS3Account;
+        $this->sdk = new \Aws\S3\S3Client([
             'credentials' => [
-                'key'     => $this->AWSS3Account->key,
-                'secret'  => $this->AWSS3Account->secretKey
+                'key'     => $this->awsS3Account->key,
+                'secret'  => $this->awsS3Account->secretKey
             ],
 
-            'region'  => $this->AWSS3Account->region,
+            'region'  => $this->awsS3Account->region,
             'version' => 'latest'
         ]);
 
-        $this->bucketName = $AWSS3Account->bucketName;
+        $this->bucketName = $awsS3Account->bucketName;
     }
 
     protected function beforeExecute()
     {
-        if (!$this->SDK) {
+        if (!$this->sdk) {
             throw new Exception('Sem conexão com o AWS.', 400);
         }
     }
@@ -56,7 +56,7 @@ class AWSS3Strategy extends CloudServiceStrategy
         $remoteFileName = $file->getRemoteFileName($this->settings->get('canEncryptName', false));
         $fileName = $file->getLocalFile();
 
-        $response = $this->SDK->putObject([
+        $response = $this->sdk->putObject([
             'Bucket'     => $this->bucketName,
             'Key'        => $uploadPath . $remoteFileName,
             'SourceFile' => $fileName
@@ -66,8 +66,8 @@ class AWSS3Strategy extends CloudServiceStrategy
             throw new Exception("O arquivo '{$fileName}' não foi transferido corretamente para o servidor AWS.", 400);
         }
 
-        $resourceURL = $response['@metadata']['effectiveUri'] ?: '';
-        return $resourceURL;
+        $resourceUrl = $response['@metadata']['effectiveUri'] ?: '';
+        return $resourceUrl;
     }
 
     protected function doDelete(DeleteCloudServiceFile $file)
@@ -75,7 +75,7 @@ class AWSS3Strategy extends CloudServiceStrategy
         $uploadPath = $this->defaultPathOfUpload();
         $remoteFileName = $file->getRemoteFileName();
 
-        $response = $this->SDK->deleteObject([
+        $response = $this->sdk->deleteObject([
             'Bucket' => $this->bucketName,
             'Key'    => $uploadPath . $remoteFileName
         ]);

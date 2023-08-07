@@ -1,9 +1,25 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Tool\JsonTools;
+namespace SOMASolucoes\CloudZ\Tool\JsonTools;
 
-class CloudServiceJsonRealPaths 
+class CloudServiceJsonRealPaths
 {
-    const FTP_REAL_PATH = ".cloudz/FTP.json";
-    const AWS_REAL_PATH = ".cloudz/AWSS3.json";
+    private static $cloudzConfigDir = '.cloudz';
+    private static $ftpConfigFilename = 'ftp.json';
+    private static $awsS3ConfigFilename = 'aws-s3.json';
+
+    private static function getBaseRealPath(string $configFilename)
+    {
+        return rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::$cloudzConfigDir . DIRECTORY_SEPARATOR . $configFilename;
+    }
+
+    public static function getFTPRealPath()
+    {
+        return self::getBaseRealPath(self::$ftpConfigFilename);
+    }
+
+    public static function getAWSS3RealPath()
+    {
+        return self::getBaseRealPath(self::$awsS3ConfigFilename);
+    }
 }

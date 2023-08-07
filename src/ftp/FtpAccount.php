@@ -1,19 +1,19 @@
 <?php 
 
-namespace SOMASolucoes\Cloudz\FTP;
+namespace SOMASolucoes\CloudZ\FTP;
 
 class FTPAccount
 {
     private int $code;
-    public $host = '';
-    public $port;
-    public $user = '';
-    public $password = '';
-    public $isPassive = false;
-    public $workDir = '';
-    public $dirPlugin = '';
-    public $accessURL = '';
-    public $useSSH = false;
+    public string $host = '';
+    public int $port;
+    public string $user = '';
+    public string $password = '';
+    public bool $isPassive = false;
+    public string $workDir = '';
+    public string $dirPlugin = '';
+    public string $accessUrl = '';
+    public bool $useSSH = false;
     
     public function __construct(int $code)
     {

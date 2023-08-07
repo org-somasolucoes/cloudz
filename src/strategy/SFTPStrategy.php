@@ -1,34 +1,34 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
 use phpseclib3\Net\SFTP;
-use SOMASolucoes\Cloudz\FTP\FtpAccount;
-use SOMASolucoes\Cloudz\CloudServiceFile;
-use SOMASolucoes\Cloudz\CloudServiceSettings;
-use SOMASolucoes\Cloudz\DeleteCloudServiceFile;
-use SOMASolucoes\Cloudz\FTP\StrategyBasedOnProtocolFTP;
+use SOMASolucoes\CloudZ\FTP\FtpAccount;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\FTP\StrategyBasedOnProtocolFTP;
 
 class SFTPStrategy extends StrategyBasedOnProtocolFTP
 {
-    private FTPAccount $SFTPAccount;
-    private $SFTP;
+    private FTPAccount $sftpAccount;
+    private $sftp;
 
-    public function __construct(FTPAccount $SFTPAccount, CloudServiceSettings $settings)
+    public function __construct(FTPAccount $sftpAccount, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-        $this->SFTPAccount = $SFTPAccount;
+        $this->sftpAccount = $sftpAccount;
     }
 
     protected function login()
     {
-        $this->SFTP = new SFTP($this->SFTPAccount->host);
-        if (!$this->SFTP) {
+        $this->sftp = new SFTP($this->sftpAccount->host);
+        if (!$this->sftp) {
             throw new Exception('Ocorreu algum problema ao iniciar a conexão com o SFTP.', 400);
         }
 
-        $loginResult = $this->SFTP->login($this->SFTPAccount->user, $this->SFTPAccount->password);
+        $loginResult = $this->sftp->login($this->sftpAccount->user, $this->sftpAccount->password);
         if (!$loginResult) {
             throw new Exception('Ocorreu algum problema ao logar no SFTP.', 400);
         }
@@ -36,17 +36,17 @@ class SFTPStrategy extends StrategyBasedOnProtocolFTP
 
     protected function changeToWorkDir()
     {
-        $realWorkDir = "{$this->SFTPAccount->workDir}/{$this->settings->get('path')}";
-        if (!$this->SFTP->file_exists($realWorkDir)) {
-            $this->SFTP->mkdir($realWorkDir, 0777, true);
+        $realWorkDir = "{$this->sftpAccount->workDir}/{$this->settings->get('path')}";
+        if (!$this->sftp->file_exists($realWorkDir)) {
+            $this->sftp->mkdir($realWorkDir, 0777, true);
         }
-        $this->SFTP->chdir($realWorkDir);
+        $this->sftp->chdir($realWorkDir);
         return $realWorkDir;
     }
 
     protected function beforeExecute()
     {
-        if (empty($this->SFTPAccount->accessURL)) {
+        if (empty($this->sftpAccount->accessURL)) {
             throw new Exception('A URL de acesso para os recursos deste FTP, não foi definida.', 400);
         }
 
@@ -59,15 +59,15 @@ class SFTPStrategy extends StrategyBasedOnProtocolFTP
         $localFile = $file->getLocalFile();
         $remoteFileName = $file->getRemoteFileName($this->settings->get('canEncryptName', false));
 
-        $wasUploaded = $this->SFTP->put($remoteFileName, $localFile, SFTP::SOURCE_LOCAL_FILE);
+        $wasUploaded = $this->sftp->put($remoteFileName, $localFile, SFTP::SOURCE_LOCAL_FILE);
         if (!$wasUploaded) {
             throw new Exception("O arquivo '{$localFile}' não foi transferido corretamente para o servidor SFTP.", 400);
         }
         
-        $resourcePath = "{$this->SFTPAccount->accessURL}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
-        $resourceURL = preg_replace("/\/{2,}/", '/', "{$resourcePath}/{$remoteFileName}");
+        $resourcePath = "{$this->sftpAccount->accessURL}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
+        $resourceUrl = preg_replace("/\/{2,}/", '/', "{$resourcePath}/{$remoteFileName}");
 
-        return $resourceURL;
+        return $resourceUrl;
     }
 
     protected function doDelete(DeleteCloudServiceFile $file)

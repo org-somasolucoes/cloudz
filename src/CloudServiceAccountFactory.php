@@ -1,14 +1,14 @@
 <?php
 
-namespace SOMASolucoes\Cloudz;
+namespace SOMASolucoes\CloudZ;
 
 use InvalidArgumentException;
-use SOMASolucoes\Cloudz\CloudServiceTypes;
-use SOMASolucoes\Cloudz\AWSS3\AWSS3AccountBuilder;
-use SOMASolucoes\Cloudz\FTP\FTPAccountBuilder;
-use SOMASolucoes\Cloudz\Tool\CloudServiceAccountTool;
-use SOMASolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonRealPaths;
-use SOMASolucoes\Cloudz\Tool\JsonTools\CloudServiceJsonTool;
+use SOMASolucoes\CloudZ\CloudServiceTypes;
+use SOMASolucoes\CloudZ\FTP\FTPAccountBuilder;
+use SOMASolucoes\CloudZ\Tool\CloudServiceAccountTool;
+use SOMASolucoes\CloudZ\AWS\AWSS3\AWSS3AccountBuilder;
+use SOMASolucoes\CloudZ\Tool\JsonTools\CloudServiceJsonRealPaths;
+use SOMASolucoes\CloudZ\Tool\JsonTools\CloudServiceJsonTool;
 
 class CloudServiceAccountFactory 
 {
@@ -16,9 +16,9 @@ class CloudServiceAccountFactory
     {
         switch ($cloudServiceType) {
             case CloudServiceTypes::FTP_ACCOUNT:
-                $jsonOfAccounts = CloudServiceJsonTool::recoverJson(CloudServiceJsonRealPaths::FTP_REAL_PATH);
+                $jsonOfAccounts = CloudServiceJsonTool::getJson(CloudServiceJsonRealPaths::getFTPRealPath());
                 $FTPAccountData = CloudServiceAccountTool::selector($jsonOfAccounts->FTPAccount, $cloudServiceCode);
-
+                
                 $FTPAccountBuilder = new FTPAccountBuilder($FTPAccountData->code);
                 $FTPAccount = $FTPAccountBuilder->usingHost($FTPAccountData->host)
                                                 ->atPort($FTPAccountData->port)
@@ -26,13 +26,13 @@ class CloudServiceAccountFactory
                                                 ->withPassword($FTPAccountData->password)
                                                 ->beingPassive($FTPAccountData->isPassive)
                                                 ->atWorkDir($FTPAccountData->dirWork)
-                                                ->onAccessURL($FTPAccountData->URLAcess)
-                                                ->usingSSH($FTPAccountData->usesSSH)
+                                                ->onAccessUrl($FTPAccountData->urlAcess)
+                                                ->usingSsh($FTPAccountData->useSsh)
                                                 ->build();
                 return $FTPAccount;
 
             case CloudServiceTypes::AWS_S3_ACCOUNT:
-                $jsonOfAccounts = CloudServiceJsonTool::recoverJson(CloudServiceJsonRealPaths::AWS_REAL_PATH);
+                $jsonOfAccounts = CloudServiceJsonTool::getJson(CloudServiceJsonRealPaths::getAWSS3RealPath());
                 $AWSS3AccountData = CloudServiceAccountTool::selector($jsonOfAccounts->AWSS3Account, $cloudServiceCode);
                 
                 $AWSS3AccountBuilder = new AWSS3AccountBuilder($AWSS3AccountData->code);

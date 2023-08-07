@@ -1,20 +1,20 @@
 <?php
 
-namespace SOMASolucoes\Cloudz;
+namespace SOMASolucoes\CloudZ;
 
 class DeleteCloudServiceFile
 {
-    private string $remoteaccessURL;
+    private string $remoteAccessUrl;
 
-    public function __construct(string $remoteaccessURL)
+    public function __construct(string $remoteAccessUrl)
     {
-        $this->remoteaccessURL = $remoteaccessURL;
+        $this->remoteAccessUrl = $remoteAccessUrl;
     }
 
     public function getRemoteFileName()
     {
-        $remoteaccessURL = explode('/', $this->remoteaccessURL);
-        $remoteFileName = end($remoteaccessURL);
+        $remoteAccessUrl = explode('/', $this->remoteAccessUrl);
+        $remoteFileName = end($remoteAccessUrl);
         return $remoteFileName;
     }
 }

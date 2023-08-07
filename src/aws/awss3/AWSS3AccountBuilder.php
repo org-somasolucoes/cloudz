@@ -1,47 +1,47 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\AWSS3;
+namespace SOMASolucoes\CloudZ\AWS\AWSS3;
 
 class AWSS3AccountBuilder
 {
-    private AWSS3Account $AWSAccount;
+    private AWSS3Account $awsS3Account;
 
     public function __construct($code)
     {
-        $this->AWSAccount = new AWSS3Account($code);
+        $this->awsS3Account = new AWSS3Account($code);
     }
 
     public function usingKey($key)
     {
-        $this->AWSAccount->key = $key ?? '';
+        $this->awsS3Account->key = $key ?? '';
         return $this;
     }
 
     public function usingSecretKey($secretKey)
     {
-        $this->AWSAccount->secretKey = $secretKey ?? '';
+        $this->awsS3Account->secretKey = $secretKey ?? '';
         return $this;
     }
 
     public function atRegion($region)
     {
-        $this->AWSAccount->region = $region ?? '';
+        $this->awsS3Account->region = $region ?? '';
         return $this;
     }
 
     public function withType($type)
     {
-        $this->AWSAccount->type = $type ?? '';
+        $this->awsS3Account->type = $type ?? '';
         return $this;
     }
 
     public function inBucket($bucketName) {
-        $this->AWSAccount->bucketName = $bucketName ?? '';
+        $this->awsS3Account->bucketName = $bucketName ?? '';
         return $this;
     }
 
     public function build()
     {
-        return $this->AWSAccount;
+        return $this->awsS3Account;
     }
 }

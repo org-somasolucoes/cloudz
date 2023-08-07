@@ -1,13 +1,13 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use InvalidArgumentException;
-use SOMASolucoes\Cloudz\CloudServiceSettings;
-use SOMASolucoes\Cloudz\CloudServiceTypes;
-use SOMASolucoes\Cloudz\Strategy\AWSS3Strategy;
-use SOMASolucoes\Cloudz\Strategy\FTPStrategy;
-use SOMASolucoes\Cloudz\Strategy\SFTPStrategy;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\CloudServiceTypes;
+use SOMASolucoes\CloudZ\Strategy\AWSS3Strategy;
+use SOMASolucoes\CloudZ\Strategy\FTPStrategy;
+use SOMASolucoes\CloudZ\Strategy\SFTPStrategy;
 
 class CloudServiceStrategyFactory 
 {

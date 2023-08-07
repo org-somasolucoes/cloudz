@@ -1,43 +1,43 @@
 <?php
 
-namespace SOMASolucoes\Cloudz\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
-use SOMASolucoes\Cloudz\FTP\FtpAccount;
-use SOMASolucoes\Cloudz\CloudServiceFile;
-use SOMASolucoes\Cloudz\CloudServiceSettings;
-use SOMASolucoes\Cloudz\DeleteCloudServiceFile;
-use SOMASolucoes\Cloudz\FTP\StrategyBasedOnProtocolFTP;
+use SOMASolucoes\CloudZ\FTP\FtpAccount;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\FTP\StrategyBasedOnProtocolFTP;
 
 class FTPStrategy extends StrategyBasedOnProtocolFTP 
 {
-    private FTPAccount $FTPAccount;
+    private FTPAccount $ftpAccount;
     private $fconn;
 
-    public function __construct(FTPAccount $FTPAccount, CloudServiceSettings $settings)
+    public function __construct(FTPAccount $ftpAccount, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-        $this->FTPAccount = $FTPAccount;
+        $this->ftpAccount = $ftpAccount;
     }
 
     protected function login()
     {
-        $this->fconn = ftp_connect($this->FTPAccount->host, $this->FTPAccount->port);
+        $this->fconn = ftp_connect($this->ftpAccount->host, $this->ftpAccount->port);
         if (!$this->fconn) {
             throw new Exception('Ocorreu algum problema ao iniciar a conexão com o FTP.', 400);
         }
 
-        $loginResult = ftp_login($this->fconn, $this->FTPAccount->user, $this->FTPAccount->password);
+        $loginResult = ftp_login($this->fconn, $this->ftpAccount->user, $this->ftpAccount->password);
 
         if (!$this->fconn or !$loginResult) {
             throw new Exception('Ocorreu algum problema ao logar no FTP.', 400);
         }
-        ftp_pasv($this->fconn, $this->FTPAccount->isPassive); 
+        ftp_pasv($this->fconn, $this->ftpAccount->isPassive); 
     }
 
     protected function changeToWorkDir()
     {
-        $realWorkDir = "{$this->FTPAccount->workDir}/{$this->settings->get('path')}";
+        $realWorkDir = "{$this->ftpAccount->workDir}/{$this->settings->get('path')}";
 
         $parts = explode('/', $realWorkDir);
         foreach ($parts as $part) {
@@ -50,8 +50,9 @@ class FTPStrategy extends StrategyBasedOnProtocolFTP
         return $realWorkDir;
     }
 
-    protected function beforeExecute() {
-        if (empty($this->FTPAccount->accessURL)) {
+    protected function beforeExecute() 
+    {
+        if (empty($this->ftpAccount->accessUrl)) {
             throw new Exception('A URL de acesso para os recursos deste FTP, não foi definida.', 400);
         }
 
@@ -68,7 +69,7 @@ class FTPStrategy extends StrategyBasedOnProtocolFTP
             throw new Exception("O arquivo '{$localFile}' não foi transferido corretamente para o servidor FTP.", 400);
         }
 
-        $resourcePath = "{$this->FTPAccount->accessURL}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
+        $resourcePath = "{$this->ftpAccount->accessUrl}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
         $resourceURL = "{$resourcePath}{$remoteFileName}";
 
         return $resourceURL;
