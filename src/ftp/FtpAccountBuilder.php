@@ -1,8 +1,8 @@
 <?php 
 
-namespace SomaGestao\CloudService\Ftp;
+namespace SOMASolucoes\CloudZ\FTP;
 
-use SomaGestao\CloudService\Ftp\FTPAccount;
+use SOMASolucoes\CloudZ\FTP\FTPAccount;
 
 class FTPAccountBuilder
 {
@@ -13,51 +13,51 @@ class FTPAccountBuilder
         $this->ftpAccount = new FTPAccount($code);
     }
 
-    public function usingHost($host)
+    public function usingHost(string $host)
     {
-        $this->ftpAccount->host = $host ?? '';
+        $this->ftpAccount->host = $host;
         return $this;
     }
 
-    public function atPort($port)
+    public function atPort(int $port)
     {
-        $this->ftpAccount->port = intval($port) ?: null;
+        $this->ftpAccount->port = intval($port);
         return $this;
     }
 
-    public function withUser($user)
+    public function withUser(string $user)
     {
-        $this->ftpAccount->user = $user ?? '';
+        $this->ftpAccount->user = $user;
         return $this;
     }
 
-    public function withPassword($password)
+    public function withPassword(string $password)
     {
-        $this->ftpAccount->password = $password ?? '';
+        $this->ftpAccount->password = $password;
         return $this;
     }
 
-    public function beingPassive($isPassive)
+    public function beingPassive(bool $isPassive)
     {
-        $this->ftpAccount->isPassive = $isPassive ?? false;
+        $this->ftpAccount->isPassive = $isPassive;
         return $this;
     }
 
-    public function atWorkDir($workDir)
+    public function atWorkDir(string $workDir)
     {
         $this->ftpAccount->workDir = rtrim($workDir, '/');
         return $this;
     }
 
-    public function onAccessUrl($accessUrl)
+    public function onAccessUrl(string $accessUrl)
     {
         $this->ftpAccount->accessUrl = rtrim($accessUrl, '/');
         return $this;
     }
     
-    public function usingSSH($useSSH)
+    public function usingSSH(string $useSSH)
     {
-        $this->ftpAccount->useSSH = $useSSH ?? false;
+        $this->ftpAccount->useSSh = $useSSH;
         return $this;
     }
 

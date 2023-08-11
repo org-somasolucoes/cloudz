@@ -1,6 +1,6 @@
 <?php
 
-namespace SomaGestao\CloudService\Response;
+namespace SOMASolucoes\CloudZ\Response;
 
 class CloudServiceResponseDeleteSuccess extends CloudServiceResponse 
 {

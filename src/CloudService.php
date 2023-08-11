@@ -1,31 +1,40 @@
 <?php
 
-namespace SomaGestao\CloudService;
-class CloudService 
+namespace SOMASolucoes\CloudZ;
+
+use Exception;
+use SOMASolucoes\CloudZ\Strategy\CloudServiceStrategy;
+use SOMASolucoes\CloudZ\Strategy\CloudServiceStrategyFactory;
+
+final class CloudService
 {
-    private int $cloudServiceCode;
     private string $type;
-    private int $accountCode;
+    private int $code;
+    private $account;
+    public CloudServiceSettings $settings;
+    private CloudServiceStrategy $strategy;
 
-    public function __construct(int $cloudServiceCode, string $type, int $accountCode)
+    public function __construct(string $type, int $code)
     {
-        $this->cloudServiceCode = $cloudServiceCode;
         $this->type = $type;
-        $this->accountCode = $accountCode;
+        $this->code = $code;
+        $this->settings = new CloudServiceSettings();
+        
+        try {
+            $this->account = CloudServiceAccountFactory::assemble($this->type, $this->code);
+            $this->strategy = CloudServiceStrategyFactory::assemble($this->type, $this->account, $this->settings);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
-    public function getCloudServiceCode()
+    function upload(CloudServiceFile $file)
     {
-        return $this->cloudServiceCode;
+        return $this->strategy->upload($file); 
     }
 
-    public function getType()
+    function delete(DeleteCloudServiceFile $file)
     {
-        return $this->type;
-    }
-
-    public function getAccountCode()
-    {
-        return $this->accountCode;
+        return $this->strategy->delete($file);
     }
 }

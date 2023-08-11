@@ -1,19 +1,20 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
-use SomaGestao\CloudService\Ftp\FtpAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Ftp\StrategyBasedOnProtocolFTP;
+use SOMASolucoes\CloudZ\FTP\FtpAccount;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\FTP\StrategyBasedOnProtocolFTP;
 
 class FTPStrategy extends StrategyBasedOnProtocolFTP 
 {
-    private FtpAccount $ftpAccount;
+    private FTPAccount $ftpAccount;
     private $fconn;
 
-    public function __construct(FtpAccount $ftpAccount, $settings)
+    public function __construct(FTPAccount $ftpAccount, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
         $this->ftpAccount = $ftpAccount;
@@ -37,11 +38,20 @@ class FTPStrategy extends StrategyBasedOnProtocolFTP
     protected function changeToWorkDir()
     {
         $realWorkDir = "{$this->ftpAccount->workDir}/{$this->settings->get('path')}";
-        ftpMakeSubdirs($this->fconn, $realWorkDir);
+
+        $parts = explode('/', $realWorkDir);
+        foreach ($parts as $part) {
+            if (!empty($part) && !ftp_chdir($this->fconn, $part)) {
+                ftp_mkdir($this->fconn, $part);
+                ftp_chdir($this->fconn, $part);
+                ftp_chmod($this->fconn, 0777, $part);
+            }
+        }
         return $realWorkDir;
     }
 
-    protected function beforeExecute() {
+    protected function beforeExecute() 
+    {
         if (empty($this->ftpAccount->accessUrl)) {
             throw new Exception('A URL de acesso para os recursos deste FTP, não foi definida.', 400);
         }

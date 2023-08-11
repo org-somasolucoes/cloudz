@@ -1,44 +1,35 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
-use SomaGestao\CloudService\CloudService;
-use SomaGestao\CloudService\Aws\AwsAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\CloudServiceSettings;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Strategy\CloudServiceStrategy;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\AWS\AWSS3\AWSS3Account;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\Strategy\CloudServiceStrategy;
 
 class AWSS3Strategy extends CloudServiceStrategy
 {
-    private CloudService $cloudService;
-    private AwsAccount $awsAccount;
-    private $bucketName;
+    private AWSS3Account $awsS3Account;
+    private string $bucketName;
     private $sdk;
 
-    public function __construct(CloudService $cloudService, AwsAccount $awsAccount, CloudServiceSettings $settings)
+    public function __construct(AWSS3Account $awsS3Account, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
-
-        $this->cloudService = $cloudService;
-        $this->awsAccount = $awsAccount;
-
+        $this->awsS3Account = $awsS3Account;
         $this->sdk = new \Aws\S3\S3Client([
             'credentials' => [
-                'key'     => $this->awsAccount->key,
-                'secret'  => $this->awsAccount->secretKey
+                'key'     => $this->awsS3Account->key,
+                'secret'  => $this->awsS3Account->secretKey
             ],
 
-            'region'  => $this->awsAccount->region,
+            'region'  => $this->awsS3Account->region,
             'version' => 'latest'
         ]);
 
-        $CI = get_instance();
-        $CI->load->model('AWSConta_Gestao');
-
-        $cloudServiceCode = $this->cloudService->getCloudServiceCode();
-        $this->bucketName = $CI->AWSConta_Gestao->getBucketName($cloudServiceCode);
+        $this->bucketName = $awsS3Account->bucketName;
     }
 
     protected function beforeExecute()
@@ -61,9 +52,9 @@ class AWSS3Strategy extends CloudServiceStrategy
             throw new Exception('Não foi informado o nome do Bucket.');
         }
         
-        $uploadPath     = $this->defaultPathOfUpload();
+        $uploadPath = $this->defaultPathOfUpload();
         $remoteFileName = $file->getRemoteFileName($this->settings->get('canEncryptName', false));
-        $fileName       = $file->getLocalFile();
+        $fileName = $file->getLocalFile();
 
         $response = $this->sdk->putObject([
             'Bucket'     => $this->bucketName,

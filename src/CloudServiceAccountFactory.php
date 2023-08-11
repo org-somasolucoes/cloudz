@@ -1,48 +1,48 @@
 <?php
 
-namespace SomaGestao\CloudService;
+namespace SOMASolucoes\CloudZ;
 
 use InvalidArgumentException;
-use SomaGestao\CloudService\CloudService;
-use SomaGestao\CloudService\CloudServiceTypes;
-use SomaGestao\CloudService\Aws\AWSAccountBuilder;
-use SomaGestao\CloudService\Ftp\FTPAccountBuilder;
+use SOMASolucoes\CloudZ\CloudServiceTypes;
+use SOMASolucoes\CloudZ\FTP\FTPAccountBuilder;
+use SOMASolucoes\CloudZ\Tool\CloudServiceAccountTool;
+use SOMASolucoes\CloudZ\AWS\AWSS3\AWSS3AccountBuilder;
+use SOMASolucoes\CloudZ\Tool\JsonTools\CloudServiceJsonRealPaths;
+use SOMASolucoes\CloudZ\Tool\JsonTools\CloudServiceJsonTool;
 
 class CloudServiceAccountFactory 
 {
-    public static function assemble(CloudService $cloudService) 
+    public static function assemble(string $cloudServiceType, int $cloudServiceCode) 
     {
-        $CI = get_instance();
-
-        switch ($cloudService->getType()) {
+        switch ($cloudServiceType) {
             case CloudServiceTypes::FTP_ACCOUNT:
-                $CI->load->model('FTPConta_Gestao');
-                $ftpAccountData = $CI->FTPConta_Gestao->getFTPAccount($cloudService->getAccountCode());
-
-                $ftpAccountBuilder = new FTPAccountBuilder($ftpAccountData['CD_FTP_CONTA']);
-                $ftpAccount = $ftpAccountBuilder->usingHost($ftpAccountData['HOST'])
-                                                ->atPort($ftpAccountData['PORTA'])
-                                                ->withUser($ftpAccountData['USUARIO'])
-                                                ->withPassword($ftpAccountData['SENHA'])
-                                                ->beingPassive($ftpAccountData['AO_PASSIVO'])
-                                                ->atWorkDir($ftpAccountData['DIR_TRABALHO'])
-                                                ->onAccessUrl($ftpAccountData['URL_ACESSO'])
-                                                ->usingSSH($ftpAccountData['UTILIZA_SSH'])
-                                                ->build();
-                return $ftpAccount;
-
-            case CloudServiceTypes::AWS_ACCOUNT:
-                $CI->load->model('AWSConta_Gestao');
-                $awsAccountData = $CI->AWSConta_Gestao->getAWSAccount($cloudService->getAccountCode());
+                $jsonOfAccounts = CloudServiceJsonTool::getJson(CloudServiceJsonRealPaths::getFTPRealPath());
+                $FTPAccountData = CloudServiceAccountTool::selector($jsonOfAccounts->FTPAccount, $cloudServiceCode);
                 
-                $awsAccountBuilder = new AWSAccountBuilder($awsAccountData['CD_AWS_CONTA']);
-                $awsAccount = $awsAccountBuilder->usingKey($awsAccountData['AWS_KEY'])
-                                                ->usingSecretKey($awsAccountData['AWS_SECRET_KEY'])
-                                                ->atRegion($awsAccountData['AWS_REGION'])
-                                                ->withType($awsAccountData['AWS_TIPO'])
-                                                ->ofTypeS3($awsAccountData['CD_AWS_S3'])
+                $FTPAccountBuilder = new FTPAccountBuilder($FTPAccountData->code);
+                $FTPAccount = $FTPAccountBuilder->usingHost($FTPAccountData->host)
+                                                ->atPort($FTPAccountData->port)
+                                                ->withUser($FTPAccountData->user)
+                                                ->withPassword($FTPAccountData->password)
+                                                ->beingPassive($FTPAccountData->isPassive)
+                                                ->atWorkDir($FTPAccountData->dirWork)
+                                                ->onAccessUrl($FTPAccountData->urlAcess)
+                                                ->usingSSH($FTPAccountData->useSSH)
                                                 ->build();
-                return $awsAccount;
+                return $FTPAccount;
+
+            case CloudServiceTypes::AWS_S3_ACCOUNT:
+                $jsonOfAccounts = CloudServiceJsonTool::getJson(CloudServiceJsonRealPaths::getAWSS3RealPath());
+                $AWSS3AccountData = CloudServiceAccountTool::selector($jsonOfAccounts->AWSS3Account, $cloudServiceCode);
+                
+                $AWSS3AccountBuilder = new AWSS3AccountBuilder($AWSS3AccountData->code);
+                $AWSS3Account = $AWSS3AccountBuilder->usingKey($AWSS3AccountData->AWSKey)
+                                                    ->usingSecretKey($AWSS3AccountData->AWSSecretKey)
+                                                    ->atRegion($AWSS3AccountData->AWSRegion)
+                                                    ->withType($AWSS3AccountData->AWSType)
+                                                    ->inBucket($AWSS3AccountData->bucketName)
+                                                    ->build();
+                return $AWSS3Account;
 
             default:
                 throw new InvalidArgumentException('Tipo de serviço da nuvem inválido ou não implementado.');

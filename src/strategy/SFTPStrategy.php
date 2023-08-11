@@ -1,20 +1,21 @@
 <?php
 
-namespace SomaGestao\CloudService\Strategy;
+namespace SOMASolucoes\CloudZ\Strategy;
 
 use Exception;
 use phpseclib3\Net\SFTP;
-use SomaGestao\CloudService\Ftp\FtpAccount;
-use SomaGestao\CloudService\CloudServiceFile;
-use SomaGestao\CloudService\DeleteCloudServiceFile;
-use SomaGestao\CloudService\Ftp\StrategyBasedOnProtocolFTP;
+use SOMASolucoes\CloudZ\FTP\FtpAccount;
+use SOMASolucoes\CloudZ\CloudServiceFile;
+use SOMASolucoes\CloudZ\CloudServiceSettings;
+use SOMASolucoes\CloudZ\DeleteCloudServiceFile;
+use SOMASolucoes\CloudZ\FTP\StrategyBasedOnProtocolFTP;
 
 class SFTPStrategy extends StrategyBasedOnProtocolFTP
 {
-    private FtpAccount $sftpAccount;
+    private FTPAccount $sftpAccount;
     private $sftp;
 
-    public function __construct(FtpAccount $sftpAccount, $settings)
+    public function __construct(FTPAccount $sftpAccount, CloudServiceSettings $settings)
     {
         parent::__construct($settings);
         $this->sftpAccount = $sftpAccount;
@@ -64,7 +65,7 @@ class SFTPStrategy extends StrategyBasedOnProtocolFTP
         }
         
         $resourcePath = "{$this->sftpAccount->accessUrl}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
-        $resourceUrl = "{$resourcePath}/{$remoteFileName}";
+        $resourceUrl = preg_replace("/\/{2,}/", '/', "{$resourcePath}/{$remoteFileName}");
 
         return $resourceUrl;
     }

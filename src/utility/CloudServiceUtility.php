@@ -1,5 +1,5 @@
 <?php
 
-namespace SomaGestao\CloudService\Utility;
+namespace SOMASolucoes\CloudZ\Utility;
 
 abstract class CloudServiceUtility { }
