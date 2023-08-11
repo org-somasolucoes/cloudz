@@ -55,9 +55,9 @@ class FTPAccountBuilder
         return $this;
     }
     
-    public function usingSsh(string $useSsh)
+    public function usingSSH(string $useSSH)
     {
-        $this->ftpAccount->useSsh = $useSsh;
+        $this->ftpAccount->useSSh = $useSSH;
         return $this;
     }
 

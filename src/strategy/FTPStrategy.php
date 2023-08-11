@@ -70,9 +70,9 @@ class FTPStrategy extends StrategyBasedOnProtocolFTP
         }
 
         $resourcePath = "{$this->ftpAccount->accessUrl}" . (!empty($this->settings->get('path')) ? "/{$this->settings->get('path')}" : '');
-        $resourceURL = "{$resourcePath}{$remoteFileName}";
+        $resourceUrl = "{$resourcePath}{$remoteFileName}";
 
-        return $resourceURL;
+        return $resourceUrl;
     }
 
     protected function doDelete(DeleteCloudServiceFile $file) {

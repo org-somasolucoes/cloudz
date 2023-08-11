@@ -27,7 +27,7 @@ class CloudServiceAccountFactory
                                                 ->beingPassive($FTPAccountData->isPassive)
                                                 ->atWorkDir($FTPAccountData->dirWork)
                                                 ->onAccessUrl($FTPAccountData->urlAcess)
-                                                ->usingSsh($FTPAccountData->useSsh)
+                                                ->usingSSH($FTPAccountData->useSSH)
                                                 ->build();
                 return $FTPAccount;
 

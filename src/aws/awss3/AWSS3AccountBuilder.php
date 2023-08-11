@@ -11,32 +11,32 @@ class AWSS3AccountBuilder
         $this->awsS3Account = new AWSS3Account($code);
     }
 
-    public function usingKey($key)
+    public function usingKey(string $key)
     {
-        $this->awsS3Account->key = $key ?? '';
+        $this->awsS3Account->key = $key;
         return $this;
     }
 
-    public function usingSecretKey($secretKey)
+    public function usingSecretKey(string $secretKey)
     {
-        $this->awsS3Account->secretKey = $secretKey ?? '';
+        $this->awsS3Account->secretKey = $secretKey;
         return $this;
     }
 
-    public function atRegion($region)
+    public function atRegion(string $region)
     {
-        $this->awsS3Account->region = $region ?? '';
+        $this->awsS3Account->region = $region;
         return $this;
     }
 
-    public function withType($type)
+    public function withType(string $type)
     {
-        $this->awsS3Account->type = $type ?? '';
+        $this->awsS3Account->type = $type;
         return $this;
     }
 
-    public function inBucket($bucketName) {
-        $this->awsS3Account->bucketName = $bucketName ?? '';
+    public function inBucket(string $bucketName) {
+        $this->awsS3Account->bucketName = $bucketName;
         return $this;
     }
 
