@@ -1,0 +1,38 @@
+name: deploy
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  gera-release:
+    name: Gera a release e as notas de mudança (CHANGELOG.md)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Analisa os commits e define as notas de mudança (CHANGELOG.md)
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ secrets.RELEASE_PAT_TOKEN }}
+          tag: ${{ github.ref_name }}
+  
+      - name: Cria a release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.changes }}
+          token: ${{ secrets.RELEASE_PAT_TOKEN }}
+
+      - name: Commita o CHANGELOG.md com as notas de mudança
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: main
+          commit_message: 'docs: atualizar o CHANGELOG.md para a versão ${{ github.ref_name }}'
+          file_pattern: CHANGELOG.md
